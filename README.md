@@ -8,10 +8,99 @@ A curated collection of freely available tools and guides to assist individuals 
 
 > **AI Disclosure:** This documentation was developed with the assistance of [Claude Code](https://claude.ai/code), an AI coding assistant by Anthropic. All content has been reviewed for accuracy, but users should verify information independently for their specific use cases.
 
+> **Note on Tool Listings:** The tools documented here represent a curated selection, not an exhaustive catalogue. Many categories (cloud storage, blockchain timestamping, metadata tools, etc.) have numerous additional providers and alternatives beyond those listed. We focus on well-established, accessible options to illustrate workflows rather than provide comprehensive market coverage.
+
+---
+
+## How It All Connects
+
+The diagram below shows how different components of digital evidence management work together:
+
+```mermaid
+flowchart TB
+    subgraph CAPTURE["📷 Evidence Capture"]
+        direction TB
+        A1[Audio Recording]
+        A2[Photo/Video]
+        A3[Web Pages]
+        A4[Email]
+        A5[Messaging]
+        A6[Social Media]
+    end
+
+    subgraph VERIFY["🔍 Verification & Integrity"]
+        direction TB
+        V1[Checksums/Hashes]
+        V2[Metadata Inspection]
+        V3[Timestamps]
+        V4[Blockchain Anchoring]
+    end
+
+    subgraph STORE["💾 Secure Storage"]
+        direction TB
+        S1[WORM Media]
+        S2[Cloud Storage]
+        S3[IPFS/Decentralised]
+        S4[Evidence Bundling]
+        S5[DEM Platforms]
+    end
+
+    subgraph PROTECT["🔒 Security & Privacy"]
+        direction TB
+        P1[Device Security]
+        P2[Secure Comms]
+        P3[OPSEC/VPN/Tor]
+        P4[Redaction Tools]
+    end
+
+    subgraph ANALYSE["🔬 Analysis & Investigation"]
+        direction TB
+        I1[OSINT Tools]
+        I2[Digital Forensics]
+        I3[AI/ML Tools]
+    end
+
+    subgraph LEGAL["⚖️ Legal Framework"]
+        direction TB
+        L1[Chain of Custody]
+        L2[Legal Considerations]
+        L3[Best Practices]
+    end
+
+    CAPTURE --> VERIFY
+    VERIFY --> STORE
+    STORE --> ANALYSE
+    PROTECT -.-> CAPTURE
+    PROTECT -.-> STORE
+    PROTECT -.-> ANALYSE
+    LEGAL -.-> CAPTURE
+    LEGAL -.-> VERIFY
+    LEGAL -.-> STORE
+```
+
+---
+
+## Quick Reference Index
+
+| Category | Description | Key Tools |
+|----------|-------------|-----------|
+| [Guides](#important-reading) | Foundation documents | Chain of custody, legal, best practices |
+| [Evidence Capture](#evidence-capture) | Recording & collection | ProofMode, ASR, SingleFile, eEvid |
+| [Evidence Storage](#evidence-storage) | Preservation & integrity | S3 Object Lock, OpenTimestamps, BagIt |
+| [Verification](#metadata-inspection) | Integrity & authenticity | ExifTool, MediaInfo, checksums |
+| [Investigations](#investigations) | OSINT & forensics | Maltego, Hunchly, Timesketch |
+| [Redaction](#redaction--anonymisation) | Privacy & PII removal | Video/audio/document redaction |
+| [OPSEC](#operational-security-opsec) | Investigator protection | VPNs, Tor, secure comms |
+| [Apps](#apps-by-platform) | Platform-specific | Android, iOS, desktop |
+
+---
+
 ## Important Reading
 
+Start here to understand the foundational concepts:
+
 - [Chain of Custody](guides/chain-of-custody.md) - Understanding evidence integrity and the capture-to-storage workflow
-- [Legal Considerations](guides/legal-considerations.md) - Understand consent laws and legal requirements before capturing evidence
+- [Legal Considerations](guides/legal-considerations.md) - Consent laws and legal requirements before capturing evidence
 - [Best Practices](guides/best-practices.md) - Suggested workflows for evidence management
 
 ---
@@ -31,17 +120,14 @@ Tools and methods for capturing different types of digital evidence.
 ### [Photo & Video](evidence-capture/photo-video/)
 - [Content Authenticity Initiative](evidence-capture/photo-video/content-authenticity.md) - Hardware-level image certification (Leica, Pixel, etc.)
 
-### [Screenshots](media/screenshots/)
-Tools for capturing and preserving screen content.
+### [Web Pages](evidence-capture/web-pages/)
+- [Browser Extensions](evidence-capture/web-pages/browser-extensions.md) - SingleFile and other extensions for saving web pages
 
 ### [Messaging](evidence-capture/messaging/)
 Extracting and preserving chat/messaging evidence.
 
 ### [Social Media](evidence-capture/social-media/)
 Preserving posts, profiles, and social media content.
-
-### [Web Pages](evidence-capture/web-pages/)
-- [Browser Extensions](evidence-capture/web-pages/browser-extensions.md) - SingleFile and other extensions for saving web pages
 
 ---
 
@@ -53,8 +139,12 @@ Secure storage and preservation methods.
 - [AWS S3 Object Lock](evidence-storage/worm-media/aws-s3-object-lock.md) - Cloud-based immutable storage
 - [Physical WORM Media](evidence-storage/worm-media/physical-worm.md) - Optical discs, tape
 
-### [Timestamps](evidence-storage/timestamps/)
+### [Timestamps & Blockchain](evidence-storage/timestamps/)
 - [OpenTimestamps](evidence-storage/timestamps/opentimestamps.md) - Blockchain-anchored timestamps
+- [Blockchain-Based Evidence](evidence-storage/blockchain/README.md) - Timestamping, notarisation, and immutable records
+
+### [Decentralised Storage](evidence-storage/ipfs.md)
+- [IPFS](evidence-storage/ipfs.md) - Content-addressed peer-to-peer storage with built-in integrity verification
 
 ### [Checksums](evidence-storage/checksums/)
 - [Checksum Utilities](evidence-storage/checksums/overview.md) - File integrity verification
@@ -62,6 +152,9 @@ Secure storage and preservation methods.
 ### [Cloud Storage](evidence-storage/cloud-storage/)
 - [Tresorit](evidence-storage/cloud-storage/tresorit.md) - End-to-end encrypted cloud storage
 - [Prodatix](evidence-storage/cloud-storage/prodatix.md) - Immutable cloud storage with retention
+- [Rclone](evidence-storage/cloud-storage/rclone.md) - Sync tool for 70+ cloud providers (with GUI option)
+
+> **Note:** Many cloud providers offer immutable storage options (Azure Blob Immutable Storage, Google Cloud Storage retention policies, Backblaze B2, Wasabi, etc.). The tools listed above are representative examples.
 
 ### [Specialist Hardware](evidence-storage/hardware/)
 - [Object First Ootbi](evidence-storage/hardware/objectfirst-ootbi.md) - Immutable backup appliance
@@ -74,24 +167,13 @@ Secure storage and preservation methods.
 
 ---
 
-## Investigations
-
-OSINT and data gathering tools for research and investigations.
-
-- [Maltego](investigations/maltego.md) - Link analysis and OSINT platform
-- [Hunchly](investigations/hunchly.md) - Web capture tool for investigations
-
-### [Digital Forensics](investigations/forensics/)
-- [Forensics Tools & Guides](investigations/forensics/README.md) - Timesketch, Kuiper, and forensic artifact resources
-
----
-
 ## Metadata Inspection
 
 Tools for examining file metadata and detecting manipulation.
 
 - [ExifTool](infosec/metadata-inspection/exiftool.md) - Industry-standard metadata reader/writer
 - [MediaInfo](infosec/metadata-inspection/mediainfo.md) - Video/audio technical metadata
+- [Additional Tools](infosec/metadata-inspection/additional-tools.md) - Metadata Extractor, Diffusion Toolkit, Dataset Tools (including AI image metadata)
 
 ---
 
@@ -106,6 +188,18 @@ Tools for removing PII and anonymising evidence before sharing.
 - [Audio Redaction](infosec/redaction/audio-redaction.md) - Audio censoring and anonymisation
 - [PII Detection Tools](infosec/redaction/pii-tools.md) - Automated PII scanning and masking
 - [Anonymisation Tools](infosec/redaction/anonymisation-tools.md) - Database and dataset anonymisation
+
+---
+
+## Investigations
+
+OSINT and data gathering tools for research and investigations.
+
+- [Maltego](investigations/maltego.md) - Link analysis and OSINT platform
+- [Hunchly](investigations/hunchly.md) - Web capture tool for investigations
+
+### [Digital Forensics](investigations/forensics/)
+- [Forensics Tools & Guides](investigations/forensics/README.md) - Timesketch, Kuiper, and forensic artifact resources
 
 ---
 
@@ -140,9 +234,13 @@ AI and machine learning tools for evidence-related tasks.
 
 Quick reference for apps organized by operating system.
 
-- [Android](apps/android/) - ProofMode, Capture Cam, ASR, FolderSync Pro
-- [iOS](apps/ios/) - Capture Cam, limited options
-- [Windows](apps/windows/) / [macOS](apps/macos/) / [Linux](apps/linux/) - Desktop tools
+| Platform | Apps Available |
+|----------|---------------|
+| [Android](apps/android/) | ProofMode, Capture Cam, ASR, FolderSync Pro |
+| [iOS](apps/ios/) | Capture Cam (limited options) |
+| [Windows](apps/windows/) | Desktop tools |
+| [macOS](apps/macos/) | Desktop tools |
+| [Linux](apps/linux/) | Desktop tools |
 
 ---
 
