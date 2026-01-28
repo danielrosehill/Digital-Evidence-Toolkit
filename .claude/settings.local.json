@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:captureapp.xyz)",
+      "WebFetch(domain:tresorit.com)",
+      "WebFetch(domain:objectfirst.com)",
+      "WebFetch(domain:prodatix.com)"
+    ]
+  }
+}
